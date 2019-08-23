@@ -1,0 +1,53 @@
+Contents of table as json (store data as json in commentscrape.js) -- then migrate json to postgresql database
+
+1) Crawl -- if its a new post, insert
+         -- if its a new comment, insert and calc sentiment
+
+2) For each post, calculate aggregate sentiment + other stats, collect crawl ID 
+
+Query: 1) top 5 most negative, top 5 most positive
+
+Security terms: "XSS", "CVE", "SQLI", "VULN", "VULNERABILITY", "BITS", "SSRF", "XXE", "LFI", "RFI", "RCE"
+------------------------------------------------------------------------------------------------------------------
+
+POST TABLE
+--PRIMARY KEY (POST_ID)
+--POST URL
+--NUM COMMENTS
+--DATE/TIME (of post) -- didnt include 
+--TEXT
+--VOTES
+--AUTHOR
+--OTHER (json)
+
+COMMENTS TABLE
+--PRIMARY KEY (COMMENT_ID)
+--POST_ID
+--DATE/TIME (of comment) -- didnt include 
+--TEXT
+--REPLYCOUNT (num of comments on comment)
+--USER
+--SENTIMENT
+--SECURITY TERMS
+
+POST SENTIMENT TABLE
+--PRIMARY KEYS (CRAWL_ID AND POST_ID)
+--SENTIMENT
+--DATE/TIME (of crawl)
+--NUM COMMENTS
+--VOTES
+--TOTAL SECURITY TERMS 
+
+CSV -> SQL
+JSON -> SQL 
+
+
+1) crawl all posts 
+ - every post gets own json
+ - for each post, collect text as json, collect date/time, collect url, collect post owner, collect num comments
+
+2) crawl all comments
+ - for each comment, collect text as json, collect date/time, collect post_ID associated, collect user, calc sentiment, security terms (list of words)
+
+3) every time we crawl, update or count crawl ID, and post_ID, calculate aggregate sentiment, date/time of the CRAWL, 
+num of comments on post, num of upvotes, total security terms (list of words )

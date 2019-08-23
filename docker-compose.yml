@@ -1,0 +1,33 @@
+version: '2'
+
+services: 
+  puppeteer:
+    container_name: puppeteer_project
+    build: 
+      context: . 
+      dockerfile: Dockerfile.app
+    ports: 
+      - "9070:9070"
+    volumes: 
+      - .:/usr/src/app/
+      - /usr/src/app/node_modules
+    tty: true
+    command: node index.js
+    depends_on: 
+      - postgres
+  
+  postgres:
+    container_name: postgres
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    ports:
+      - "5432:5432"
+    volumes:
+      - database_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/migrations/
+    restart: always
+    #command:  pg_ctl -D /var/lib/postgresql/data -l logfile start
+
+volumes: 
+  database_data:
